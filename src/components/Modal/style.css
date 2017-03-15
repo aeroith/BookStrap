@@ -1,0 +1,28 @@
+.description {
+    font-family: "Roboto", sans-serif;
+    font-size: 18px;
+}
+img {
+    min-width: 160px;
+}
+.column img {
+    min-width: 0px;
+}
+.ui.red.button.close-button{
+    display: none;
+}
+.ui.header, .ui.button.subject-button {
+    font-family: "Roboto", "Cambria", "Cochin", "Georgia", "Times New Roman", serif !important;
+}
+/* Tablet Size */
+@media only screen and (min-device-width : 320px) and (max-device-width : 766px) {
+    .publisher {
+        font-size: .9em !important;
+    }
+    .ui.red.button.close-button{
+        display: inline-block;
+    }
+    .ui.button.subject-button {
+        font-size: .9rem !important;
+    }
+}

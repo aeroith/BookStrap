@@ -1,0 +1,35 @@
+{
+  "name": "calibre-server",
+  "version": "0.1.0",
+  "private": true,
+  "proxy": "http://localhost:3001",
+  "devDependencies": {
+    "enzyme": "^2.7.1",
+    "jest-enzyme": "^2.1.2",
+    "react-addons-test-utils": "^15.4.2",
+    "react-scripts": "0.9.5"
+  },
+  "dependencies": {
+    "body-parser": "^1.16.1",
+    "classnames": "^2.2.5",
+    "express": "^4.14.1",
+    "helmet": "^3.5.0",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-dropzone": "^3.9.2",
+    "react-router": "^3.0.2",
+    "react-scripts": "^0.9.5",
+    "react-tap-event-plugin": "^2.0.1",
+    "semantic-ui-css": "^2.2.4",
+    "semantic-ui-react": "^0.64.7",
+    "sendgrid": "^4.7.1",
+    "superagent": "^3.4.1",
+    "validator": "^6.2.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}

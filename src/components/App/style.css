@@ -1,0 +1,118 @@
+* {
+  box-sizing: border-box;
+}
+p, h1, h2, h3, h4 {
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
+  font-size: 16px;
+}
+.App {
+  background: url("./app-header.jpg") center center no-repeat; 
+  background-size: cover; 
+  text-align: center;
+  height: 600px;
+  width: 100%;
+}
+
+.container {
+  max-width: 940px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.App .container {
+  position: relative;
+  top: 100px;
+}
+
+.App h1 {
+  padding-top: 1em;
+  font-family: 'Playfair Display', serif;
+  color: #fff;
+  font-size: 120px;
+}
+.App-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.Menu-div {
+  padding-top: 40px;
+  background-size: cover ; 
+  text-align: center;
+  background-color: #eaeaea;
+  padding-bottom: 40px;
+}
+
+.Menu-div div {
+  background-color: #eaeaea;
+}
+
+.App-intro {
+  font-size: large;
+}
+
+@keyframes App-logo-spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+html, body {
+height: 100%;
+margin:0;
+  background-color: #eaeaea;
+}
+
+.ui.small.image.LastImg img {
+  max-height: 200px !important;
+  min-width: initial;
+}
+.item {
+  max-width: 150px;
+}
+
+.ui.icon.input {
+  width: 380px;
+}
+
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+  .ui.icon.input {
+    width: 320px;
+  }
+  .App h1 {
+    font-size: 90px;
+  }
+  .item:not(.dropdown) {
+    max-width: 80px;
+    margin-right: 10px;
+  }
+  .book-item *{
+    font-size: 0.8rem !important;
+  }
+ }
+
+.custom-search {
+  display: inline-block;
+}
+.search-div {
+  background-color: #eaeaea;
+  text-align: center;
+  margin: 0 auto;
+}
+.results.transition.visible {
+  text-align: center;
+}
+.empty-div {
+  height: 300px;
+  background-color: #eaeaea;
+}
+.last-books-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ui.horizontal.list.book-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: auto
+}

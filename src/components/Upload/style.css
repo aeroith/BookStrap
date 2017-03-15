@@ -1,0 +1,32 @@
+.Upload{
+  margin-top: 50px;
+  text-align: center;
+  background-color: #eaeaea;
+  padding-bottom: 240px;
+}
+
+.Upload-logo {
+  animation: App-logo-spin infinite 20s linear;
+  height: 80px;
+}
+
+.Upload-header {
+  color: white;
+  background-color: #eaeaea;
+}
+
+.Upload-intro {
+  font-size: large;
+}
+
+.dropzone{
+  display: table;
+  margin: 0 auto;
+}
+.dropzone img {
+  cursor: hand; 
+  cursor: pointer;
+}
+.dropzone h3 {
+  margin-top: 0px;
+}
