@@ -51,10 +51,6 @@ p, h1, h2, h3, h4 {
   font-size: large;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
 
 html, body {
 height: 100%;
@@ -79,7 +75,8 @@ margin:0;
     width: 320px;
   }
   .App h1 {
-    font-size: 90px;
+    font-size: 68px;
+    padding-top: 2em;
   }
   .item:not(.dropdown) {
     max-width: 80px;

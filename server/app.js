@@ -12,6 +12,7 @@ const multer = require("multer");
 const upload = multer({dest: "./client/books"});
 const helmet = require("helmet");
 const SENDGRID_API_KEY = require("./config.json").SENDGRID_API_KEY;
+const SENDGRID_MAIL = require("./config.json").SENDGRID_MAIL;
 var helper = require("sendgrid").mail;
 
 app.use(compression());
@@ -67,7 +68,7 @@ app.put("/rate", (req, res) => {
 
 app.post("/mail", (req, res) => {
     var from_email = new helper.Email(req.body.email);
-    var to_email = new helper.Email("scillidag@gmail.com");
+    var to_email = new helper.Email(SENDGRID_MAIL);
     var subject = "Ticket from " + req.body.name;
     var content = new helper.Content("text/plain", req.body.subject);
     var mail = new helper.Mail(from_email, subject, to_email, content);

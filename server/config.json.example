@@ -1,5 +1,6 @@
 {
     "SENDGRID_API_KEY": "",
+    "SENDGRID_MAIL": "",
     "MONGODB_CONNECTION": "",
     "MONGOOSE_COLLECTION": ""
 }
