@@ -9,16 +9,19 @@ const compression = require("compression");
 const bodyParser = require("body-parser")
 const parser = require("epub-metadata-parser");
 const multer = require("multer");
-const upload = multer({dest: "./client/books"});
+const upload = multer({
+    dest: "./client/books"
+});
 const helmet = require("helmet");
 const SENDGRID_API_KEY = require("./config.json").SENDGRID_API_KEY;
 const SENDGRID_MAIL = require("./config.json").SENDGRID_MAIL;
+const kindlegen = require("kindlegen");
 var helper = require("sendgrid").mail;
 
 app.use(compression());
 // Setup logger
 app.use(morgan(":remote-addr - :remote-user [:date[clf]] \":method :url HTTP/:http-version\" :st" +
-        "atus :res[content-length] :response-time ms"));
+    "atus :res[content-length] :response-time ms"));
 // Setup helmet for basic security
 app.use(helmet());
 // Serve static assets
@@ -58,7 +61,7 @@ app.put("/rate", (req, res) => {
             rating: req.body.rating * 2
         }
     }, err => {
-        if (err) 
+        if (err)
             res.status(400).end();
         res
             .status(200)
@@ -86,28 +89,36 @@ app.post("/mail", (req, res) => {
 });
 
 app.get("/api/authors", (req, res) => {
-    Book.find({}, {"_id": 0})
+    Book.find({}, {
+            "_id": 0
+        })
         .select("author")
         .exec((err, books) => {
-            if (err) 
+            if (err)
                 return console.log(err);
             var newjson = [];
             _.forEach(books, (obj) => {
-                newjson.push({"title": obj.author});
+                newjson.push({
+                    "title": obj.author
+                });
             });
             res.send(_.uniqBy(newjson, "title"));
         });
 });
 
 app.get("/api/authors/:id", (req, res) => {
-    Book.find({}, {"_id": 0})
+    Book.find({}, {
+            "_id": 0
+        })
         .select("author")
         .exec((err, books) => {
-            if (err) 
+            if (err)
                 return console.log(err);
             var newjson = [];
             _.forEach(books, (obj) => {
-                newjson.push({"title": obj.author});
+                newjson.push({
+                    "title": obj.author
+                });
             });
             var authors = _.filter(newjson, (prop) => (prop.title.startsWith(req.params.id) || prop.title.toLowerCase().startsWith(req.params.id)));
             res.send(authors);
@@ -116,9 +127,12 @@ app.get("/api/authors/:id", (req, res) => {
 
 app.get("/api/getbook/:author/:book", (req, res) => {
     Book
-        .find({author: req.params.author, title: req.params.book})
+        .find({
+            author: req.params.author,
+            title: req.params.book
+        })
         .exec((err, book) => {
-            if (err) 
+            if (err)
                 return console.log(err);
             res.send(book);
         });
@@ -129,11 +143,13 @@ app.get("/api/last/:page", (req, res) => {
     let bookCount = 6;
     Book
         .find({})
-        .sort({"_id": -1})
+        .sort({
+            "_id": -1
+        })
         .skip((req.params.page - 1) * bookCount)
         .limit(bookCount)
         .exec((err, books) => {
-            if (err) 
+            if (err)
                 return console.log(err);
             res.send(books);
         });
@@ -145,7 +161,7 @@ app.get("/api/total", (req, res) => {
         .find({})
         .count()
         .exec((err, count) => {
-            if (err) 
+            if (err)
                 return console.log(err);
             res.send(Math.ceil(count / 6).toString());
         });
@@ -153,14 +169,19 @@ app.get("/api/total", (req, res) => {
 
 // Get all books by their title and author
 app.get("/api/books/", (req, res) => {
-    Book.find({}, {"_id": 0})
+    Book.find({}, {
+            "_id": 0
+        })
         .select("title author")
         .exec((err, books) => {
-            if (err) 
+            if (err)
                 return console.log(err);
             var bookContent = [];
             _.forEach(books, (obj) => {
-                bookContent.push({"title": obj.title, "description": obj.author});
+                bookContent.push({
+                    "title": obj.title,
+                    "description": obj.author
+                });
             });
             res.send(bookContent);
         });
@@ -168,16 +189,20 @@ app.get("/api/books/", (req, res) => {
 
 // Get all book categories
 app.get("/api/categories", (req, res) => {
-    Book.find({}, {"_id": 0})
+    Book.find({}, {
+            "_id": 0
+        })
         .select("subject")
         .exec((err, books) => {
-            if (err) 
+            if (err)
                 return console.log(err);
             let jsonData = [];
             // format the properties to fit the required format
             _.forEach(books, (obj) => {
                 _.forEach(obj.subject, (prop) => {
-                    jsonData.push({"title": prop});
+                    jsonData.push({
+                        "title": prop
+                    });
                 });
             });
             // remove duplicates
@@ -188,11 +213,13 @@ app.get("/api/categories", (req, res) => {
 // Get the corresponding author info
 app.get("/api/authorlist/:author", (req, res) => {
     Book.find({
-        author: req.params.author
-    }, {"_id": 0})
+            author: req.params.author
+        }, {
+            "_id": 0
+        })
         .select("title")
         .exec((err, result) => {
-            if (err) 
+            if (err)
                 return console.log(err);
             res.send(result);
         });
@@ -201,13 +228,15 @@ app.get("/api/authorlist/:author", (req, res) => {
 // Get the corresponding author and title for the required category
 app.get("/api/getcategory/:category", (req, res) => {
     Book.find({
-        subject: {
-            $in: [req.params.category]
-        }
-    }, {"_id": 0})
+            subject: {
+                $in: [req.params.category]
+            }
+        }, {
+            "_id": 0
+        })
         .select("title author")
         .exec((err, result) => {
-            if (err) 
+            if (err)
                 return console.log(err);
             res.send(result);
         });
@@ -225,6 +254,15 @@ function addBook(path, outDir) {
         .parse(path, outDir, function (book) {
             console.log(path);
             console.log(book);
+            fs.readFile(path, (err, epub) => {
+                if (err) throw err;
+                kindlegen(epub, (err, mobi) => {
+                    fs.writeFile(outDir + "/" + "Books/" + book.author + "/" + book.title + "/" +
+                        book.fileName.slice(0, -5) + ".mobi", mobi, err => {
+                            if (err) throw err;
+                        });
+                });
+            });
             var query = {
                     author: book.author,
                     title: book.title,
@@ -234,7 +272,7 @@ function addBook(path, outDir) {
                 options = {};
 
             Book.findOneAndUpdate(query, update, options, function (err, result) {
-                if (err) 
+                if (err)
                     return console.log(err);
                 console.log(result);
                 if (!result) {
@@ -252,10 +290,11 @@ function addBook(path, outDir) {
                     });
 
                     newBook.save(function (err) {
-                        if (err) 
+                        if (err)
                             console.log(err);
-                    }
-                    );
+
+
+                    });
                 }
             });
         });
