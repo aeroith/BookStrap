@@ -1,5 +1,7 @@
 # BookStrap
 
+[![Build Status](https://travis-ci.org/aeroith/BookStrap.svg?branch=master)](https://travis-ci.org/aeroith/BookStrap)
+
 BookStrap is created to provide an easy and useful way of organizing and
 collecting ebooks. It is very easy to use and low on resources. It also has a
 contact form powered by sendgrid configured, but it is optional.
@@ -20,7 +22,7 @@ on the server environment using tools such as xvfb and imagemagick. Also it was 
 to add and retrieve content from the database which still made me deal with hacky tools. So I developed my
 own.
 
-It is still in an alpha stage and I provided some TODOs at the end of this Readme. If you are interested
+It is still in an alpha stage and I provided some TODOs at the end of this Readme. If you are interested in
 the main advantages of the framework, they are:
 
 - Easy to install and portable
@@ -55,5 +57,5 @@ that if you have problems with adding books to the server, please refer to my
 
 ## TODO
 I plan to add a login page to access the material, since you don't really want anyone to access your
-books right? Also in the future, I plan to add to .mobi convertion so that it is possible to send
+books right? Also in the future, I plan to add to .mobi conversion so that it is possible to send
 the books directly to the Kindle.
