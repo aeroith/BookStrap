@@ -15,8 +15,8 @@ const upload = multer({
 const helmet = require("helmet");
 const SENDGRID_API_KEY = require("./config.json").SENDGRID_API_KEY;
 const SENDGRID_MAIL = require("./config.json").SENDGRID_MAIL;
-const kindlegen = require("kindlegen");
 var helper = require("sendgrid").mail;
+const converter = require("./helpers/converter");
 
 app.use(compression());
 // Setup logger
@@ -38,12 +38,10 @@ app.get("/download/:author/:title/:bookName", (req, res) => {
 })
 
 app.post("/upload", upload.single("epub"), function (req, res, next) {
-    console.log(req.file); //form files
     fs.rename("./" + req.file.path, "./public/Books/" + req.file.originalname, function (err) {
         if (err) {
             console.log(err);
         } else {
-            // testBook("./Books/" + req.file.originalname);
             addBook("./public/Books/" + req.file.originalname, "./public");
         }
     });
@@ -254,15 +252,8 @@ function addBook(path, outDir) {
         .parse(path, outDir, function (book) {
             console.log(path);
             console.log(book);
-            fs.readFile(path, (err, epub) => {
-                if (err) throw err;
-                kindlegen(epub, (err, mobi) => {
-                    fs.writeFile(outDir + "/" + "Books/" + book.author + "/" + book.title + "/" +
-                        book.fileName.slice(0, -5) + ".mobi", mobi, err => {
-                            if (err) throw err;
-                        });
-                });
-            });
+            converter.convertToMobi(path)
+                     .catch(e => console.log(e));
             var query = {
                     author: book.author,
                     title: book.title,
