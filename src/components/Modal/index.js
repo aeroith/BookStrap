@@ -88,15 +88,21 @@ export default class BookModal extends Component {
             </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
+                <Button color="blue" onClick={this.handleKindleSend} className="send-button">
+                    <Button.Content visible><Icon name="send" /></Button.Content>
+                </Button>
                 <Button className="close-button" style={{float:"left"}} color='red'
-                onClick={this.close}>Close</Button>
-                <Button animated="vertical" color="green" as={Link} 
+                 onClick={this.close}>
+                    <Button.Content visible><Icon name="close" /></Button.Content>
+                 </Button>
+                <Button color="green" as={Link} 
                 to={`/download/${bookContent[0].author}/${bookContent[0].title}/${bookContent[0].bookName}`.replace(/#/g, '%23')} 
                 target="_blank">
-                    <Button.Content hidden><Icon name="arrow circle down" /></Button.Content>
-                    <Button.Content visible>Download</Button.Content>
+                    <Button.Content visible><Icon name="arrow circle down" /></Button.Content>
                 </Button>
             </Modal.Actions>
+            <br />
+            <br />
         </Modal> 
         );
     }
