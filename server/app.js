@@ -268,9 +268,7 @@ function addBook(path, outDir) {
         .parse(path, outDir, function (book) {
             console.log(path);
             console.log(book);
-            converter.convertToMobi(outDir + "/Books/" + book.author + "/" + book.title + "/" + book.fileName)
-                .catch(e => console.log(e));
-            var query = {
+	     var query = {
                     author: book.author,
                     title: book.title,
                     publisher: book.publisher
@@ -295,7 +293,8 @@ function addBook(path, outDir) {
                         rating: book.rating,
                         bookName: book.fileName
                     });
-
+		    converter.convertToMobi(outDir + "/Books/" + book.author + "/" + book.title + "/" + book.fileName)
+                        .catch(e => console.log(e));
                     newBook.save(function (err) {
                         if (err)
                             console.log(err);
