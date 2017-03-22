@@ -103,3 +103,5 @@ public/Books
 # server configuration
 config.json
 
+# ignore test folder
+!server/test/*

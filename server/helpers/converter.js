@@ -9,6 +9,7 @@ exports.convertToMobi = f => new Promise((res, rej) => {
         kindlegen(epub, (err, mobi) => {
             fs.writeFile(f.slice(0,-4) + "mobi" , mobi, err => {
                 if(err) return rej(err);
+                else res(null);
             });
         });
     });
