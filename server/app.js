@@ -17,6 +17,8 @@ const SENDGRID_API_KEY = require("./config.json").SENDGRID_API_KEY;
 const SENDGRID_MAIL = require("./config.json").SENDGRID_MAIL;
 var helper = require("sendgrid").mail;
 const converter = require("./helpers/converter");
+const config = require("./config.json");
+const kindleMail = require("./helpers/kindlemail")
 
 app.use(compression());
 // Setup logger
@@ -240,6 +242,20 @@ app.get("/api/getcategory/:category", (req, res) => {
         });
 });
 
+// send book to kindle device
+app.post("/sendtokindle", (req, res) => {
+    kindleMail.send({
+        to: config.KINDLE_MAIL,
+        sender: {
+            user: config.GMAIL_ADDRESS,
+            pass: config.GMAIL_PASSWORD,
+        },
+        filePath: `./public/Books/${req.body.author}/${req.body.title}/${req.body.bookName.slice(0,-4)}mobi`
+    }).then((info) => {
+        res.status(200).end();
+    }).catch(e => console.log(e));
+});
+
 // Always return the main index.html, so react-router render the route in the
 // client
 app.get("*", (req, res) => {
@@ -252,8 +268,8 @@ function addBook(path, outDir) {
         .parse(path, outDir, function (book) {
             console.log(path);
             console.log(book);
-            converter.convertToMobi(path)
-                     .catch(e => console.log(e));
+            converter.convertToMobi(outDir + "/Books/" + book.author + "/" + book.title + "/" + book.fileName)
+                .catch(e => console.log(e));
             var query = {
                     author: book.author,
                     title: book.title,
@@ -283,8 +299,6 @@ function addBook(path, outDir) {
                     newBook.save(function (err) {
                         if (err)
                             console.log(err);
-
-
                     });
                 }
             });

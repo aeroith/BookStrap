@@ -25,4 +25,7 @@ img {
     .ui.button.subject-button {
         font-size: .9rem !important;
     }
+    .ui.button.functional-button span {
+        display: none;
+    }
 }

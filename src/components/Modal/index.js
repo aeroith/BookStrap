@@ -19,6 +19,7 @@ export default class BookModal extends Component {
                        publisher: '',
                        pubdate: '',
                        rating: '',
+                       bookName: '',
                        }
                     ],}
     }
@@ -29,6 +30,15 @@ export default class BookModal extends Component {
                                         .end((err, res) => {
                                             if(err) console.log("not available");
                                         });
+    }
+    handleKindleSend = e => {
+        var self = this;
+        request.post("/sendtokindle")
+               .send(self.state.bookContent[0])
+               .end((err, resp) => {
+                   if(!err)
+                    return resp;
+               })
     }
     
     handleRating = (e,data) => {
@@ -88,17 +98,17 @@ export default class BookModal extends Component {
             </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
-                <Button color="blue" onClick={this.handleKindleSend} className="send-button">
-                    <Button.Content visible><Icon name="send" /></Button.Content>
+                <Button color="blue" onClick={this.handleKindleSend} className="functional-button">
+                    <Button.Content visible><Icon name="send" /><span> Send to Kindle</span></Button.Content>
                 </Button>
                 <Button className="close-button" style={{float:"left"}} color='red'
                  onClick={this.close}>
                     <Button.Content visible><Icon name="close" /></Button.Content>
                  </Button>
-                <Button color="green" as={Link} 
+                <Button color="green" as={Link} className="functional-button"
                 to={`/download/${bookContent[0].author}/${bookContent[0].title}/${bookContent[0].bookName}`.replace(/#/g, '%23')} 
                 target="_blank">
-                    <Button.Content visible><Icon name="arrow circle down" /></Button.Content>
+                    <Button.Content visible><Icon name="arrow circle down" /><span> Download</span></Button.Content>
                 </Button>
             </Modal.Actions>
             <br />
