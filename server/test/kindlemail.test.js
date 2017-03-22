@@ -46,4 +46,15 @@ describe("Input validator", () => {
             filePath: "invalid.mobi"
         }).should.eventually.be.rejectedWith("File not found!");
     });
+    it("should fail with invalid user pass combinations", () => {
+        fs.openSync(filepath,"w");
+        return k.send({
+            to: "valid@email.com",
+            sender: {
+                user: "valid@email.com",
+                pass: "pass"
+            },
+            filePath: filepath
+        }).then(fs.unlinkSync(filepath)).should.eventually.be.rejectedWith("ECONNREFUSED");
+    })
 });

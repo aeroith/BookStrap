@@ -15,14 +15,14 @@ let checkFileExists = s => new Promise(r => fs.access(s, fs.F_OK, e => r(!e)));
  * @filePath[String]
  *
  **/
-exports.send = params => new Promise((rej, res) => {
+exports.send = params => new Promise((res, rej) => {
     if (!validateEmail(params.sender.user) || !validateEmail(params.to)) {
         return rej(new Error("Email is not valid"));
     }
     checkFileExists(params.filePath)
         .then(result => {
             if(!result)
-                return rej(new Error("File not found! - " + params.filePath));
+                return rej(Error("File not found!"));
             let transporter = nodemailer.createTransport("SMTP", {
                 auth: {
                     user: params.sender.user,
@@ -41,9 +41,9 @@ exports.send = params => new Promise((rej, res) => {
             // send mail with defined transport object
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
-                    return rej(error);
+                    rej(error);
                 }
                 res(info);
             });
-        }).catch(e => console.log(e));
+        });
 });
