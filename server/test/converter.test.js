@@ -9,14 +9,15 @@ const fs = require("fs");
 const validFilePath = __dirname + "/convtest.epub";
 
 describe("Converter test", () => {
+    after(function () {
+        fs.unlinkSync(validFilePath.slice(0, -4) + "mobi");
+    });
     it("should convert the epub to mobi", () => {
         return conv.convertToMobi(validFilePath)
             .then(() => {
                 // accessSync returns undefined if file exists
                 fs.accessSync(validFilePath.slice(0, -4) + "mobi");
             })
-                // remove converted file
-            .then(() => fs.unlinkSync(validFilePath.slice(0,-4) + "mobi"))
             .should.eventually.be.undefined;
     });
     it("should check file extension", () => {

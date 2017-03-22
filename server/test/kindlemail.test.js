@@ -12,9 +12,15 @@ const mockMails = ["asd@asd", "asd", "@", ".asd@asd.asd",
 ];
 
 describe("Input validator", () => {
+    before(function () {
+        fs.openSync(filepath, "w");
+    });
+
+    after(function () {
+        fs.unlinkSync(filepath, "w");
+    });
     mockMails.map(elem => {
         it("checks if user email is valid", () => {
-            fs.openSync(filepath, "w");
             return k.send({
                 to: "valid@email.com",
                 sender: {
@@ -22,10 +28,9 @@ describe("Input validator", () => {
                     pass: "pass"
                 },
                 filePath: filepath
-            }).then(fs.unlinkSync(filepath)).should.eventually.be.rejectedWith("Email is not valid");
+            }).should.eventually.be.rejectedWith("Email is not valid");
         });
         it("checks if recipient email is valid", () => {
-            fs.openSync(filepath, "w");
             return k.send({
                 to: elem,
                 sender: {
@@ -33,7 +38,7 @@ describe("Input validator", () => {
                     pass: "pass"
                 },
                 filePath: filepath
-            }).then(fs.unlinkSync(filepath)).should.eventually.be.rejectedWith("Email is not valid");
+            }).should.eventually.be.rejectedWith("Email is not valid");
         });
     });
     it("checks if file exists", () => {
@@ -47,7 +52,6 @@ describe("Input validator", () => {
         }).should.eventually.be.rejectedWith("File not found!");
     });
     it("should fail with invalid user pass combinations", () => {
-        fs.openSync(filepath,"w");
         return k.send({
             to: "valid@email.com",
             sender: {
@@ -55,6 +59,6 @@ describe("Input validator", () => {
                 pass: "pass"
             },
             filePath: filepath
-        }).then(fs.unlinkSync(filepath)).should.eventually.be.rejectedWith("ECONNREFUSED");
-    })
+        }).then(() => fs.unlinkSync(filepath)).should.eventually.be.rejectedWith("ECONNREFUSED");
+    });
 });
