@@ -4,7 +4,6 @@
   "private": true,
   "proxy": "http://localhost:3001",
   "devDependencies": {
-    "chai-as-promised": "^6.0.0",
     "enzyme": "^2.7.1",
     "jest-enzyme": "^2.1.2",
     "react-addons-test-utils": "^15.4.2",
