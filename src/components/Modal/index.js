@@ -39,6 +39,7 @@ export default class BookModal extends Component {
         var self = this;
         this.setState({isLoading: true})
         request.post("/sendtokindle")
+               .timeout({deadline: 600000})
                .send(self.state.bookContent[0])
                .end((err, resp) => {
                    if(!err){
@@ -76,6 +77,7 @@ export default class BookModal extends Component {
         this.setState({isOpen: false});
     }
     render(){
+        // TODO: Add placeholder image if cover is not found
         // used regexp to extract description
         // using browser's html parser could be used if any bugs are introduced 
         const {open, bookContent, isLoading, isSent, isSuccessful} = this.state
