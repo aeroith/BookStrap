@@ -260,7 +260,10 @@ app.post("/sendtokindle", (req, res) => {
             filePath: `./public/Books/${req.body.author}/${req.body.title}/${req.body.bookName.slice(0,-4)}mobi`
         }).then((info) => {
             res.status(200).end();
-        }).catch(e => console.log(e));
+        }).catch(e => {
+            console.log(e);
+            res.status(500).end();
+        });
     });
 });
 

@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import request from "superagent";
 import React, {PropTypes, Component } from 'react'
-import { Rating, Header, Image, Modal, Button, Icon, List } from 'semantic-ui-react'
+import { Rating, Header, Image, Modal, Button, Icon, List, Dimmer, Loader, Message } from 'semantic-ui-react'
 import {Link} from "react-router"
 import CategoryModal from "../CategoryModal"
 import "./style.css";
@@ -11,15 +11,19 @@ export default class BookModal extends Component {
         super(props);
         this.state = { open: false,
                        categoryOpen: false,
-                       bookContent: [{author:'',
-                       title:'',
-                       description:'',
-                       cover: '',
-                       subject: [''],
-                       publisher: '',
-                       pubdate: '',
-                       rating: '',
-                       bookName: '',
+                       isLoading: false,
+                       isSent: false,
+                       bookContent: [
+                       {
+                        author:'',
+                        title:'',
+                        description:'',
+                        cover: '',
+                        subject: [''],
+                        publisher: '',
+                        pubdate: '',
+                        rating: '',
+                        bookName: '',
                        }
                     ],}
     }
@@ -33,11 +37,18 @@ export default class BookModal extends Component {
     }
     handleKindleSend = e => {
         var self = this;
+        this.setState({isLoading: true})
         request.post("/sendtokindle")
                .send(self.state.bookContent[0])
                .end((err, resp) => {
-                   if(!err)
+                   if(!err){
+                    this.setState({isLoading: false, isSent: true, isSuccessful: true})
                     return resp;
+                   }
+                   else {
+                    this.setState({isLoading: false, isSent: true, isSuccessful: false})
+                    return resp;
+                   }
                })
     }
     
@@ -67,7 +78,7 @@ export default class BookModal extends Component {
     render(){
         // used regexp to extract description
         // using browser's html parser could be used if any bugs are introduced 
-        const {open, bookContent} = this.state
+        const {open, bookContent, isLoading, isSent, isSuccessful} = this.state
         return(
         // conditional rendering to prevent unnecessary render
          open && <Modal dimmer="blurring"
@@ -110,7 +121,9 @@ export default class BookModal extends Component {
                 target="_blank">
                     <Button.Content visible><Icon name="arrow circle down" /><span> Download</span></Button.Content>
                 </Button>
+                <KindleLoader status={isLoading}/>
             </Modal.Actions>
+            <KindleMessage open={isSent} result={isSuccessful}/>
             <br />
             <br />
         </Modal> 
@@ -151,4 +164,26 @@ class SubjectList extends Component {
 SubjectList.PropTypes = {
     subjects: PropTypes.array.isRequired,
     handleClose: PropTypes.func.isRequired
+}
+
+const KindleLoader = (props) => {
+    return(
+    <Dimmer active={props.status}>
+       <Loader>Sending the book</Loader> 
+    </Dimmer>
+    );
+}
+
+const KindleMessage = (props) => {
+    return (
+        props.open ? props.result ?
+            <Message positive>
+                Selected book is successfully sent to the Kindle device!
+                    </Message> :
+            <Message negative>
+                An error occured, please check the log.
+                    </Message> :
+            <div></div>
+
+    )
 }
