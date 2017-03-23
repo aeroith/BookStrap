@@ -99,13 +99,17 @@ export default class BookModal extends Component {
             src={`/books/${bookContent[0].author}/${bookContent[0].title}/${bookContent[0].cover}`} />
             <Modal.Description>
                 <Header>{bookContent[0].title}</Header>
-                {bookContent[0].description.replace(/<\/?[^>]+(>|$)/g, "")}
+                {
+                    bookContent[0].description ?
+                    bookContent[0].description.replace(/<\/?[^>]+(>|$)/g, "")
+                    : "No description is available for this book"
+                }
                 <br/>
                 <br/>
                 <SubjectList handleClose={this.close} subjects={bookContent[0].subject} />
                 <br />
                 <br />
-                <Header className="publisher" floated="left">Publisher: {bookContent[0].publisher}</Header>
+                {bookContent[0].publisher && <Header className="publisher" floated="left">Publisher: {bookContent[0].publisher}</Header>}
             </Modal.Description>
             </Modal.Content>
             <Modal.Actions>
