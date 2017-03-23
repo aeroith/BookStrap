@@ -244,16 +244,24 @@ app.get("/api/getcategory/:category", (req, res) => {
 
 // send book to kindle device
 app.post("/sendtokindle", (req, res) => {
-    kindleMail.send({
-        to: config.KINDLE_MAIL,
-        sender: {
-            user: config.GMAIL_ADDRESS,
-            pass: config.GMAIL_PASSWORD,
-        },
-        filePath: `./public/Books/${req.body.author}/${req.body.title}/${req.body.bookName.slice(0,-4)}mobi`
-    }).then((info) => {
-        res.status(200).end();
-    }).catch(e => console.log(e));
+    let checkFileExists = s => new Promise(r => fs.access(s, fs.F_OK, e => r(!e)));
+    let mobiPath = `./public/Books/${req.body.author}/${req.body.title}/${req.body.bookName.slice(0,-4)}mobi`;
+    checkFileExists(mobiPath).then(result => {
+        if (!result) {
+            return converter.convertToMobi(mobiPath.slice(0, -4) + "epub");
+        }
+    }).then(() => {
+        kindleMail.send({
+            to: config.KINDLE_MAIL,
+            sender: {
+                user: config.GMAIL_ADDRESS,
+                pass: config.GMAIL_PASSWORD,
+            },
+            filePath: `./public/Books/${req.body.author}/${req.body.title}/${req.body.bookName.slice(0,-4)}mobi`
+        }).then((info) => {
+            res.status(200).end();
+        }).catch(e => console.log(e));
+    });
 });
 
 // Always return the main index.html, so react-router render the route in the
@@ -268,7 +276,7 @@ function addBook(path, outDir) {
         .parse(path, outDir, function (book) {
             console.log(path);
             console.log(book);
-	     var query = {
+            var query = {
                     author: book.author,
                     title: book.title,
                     publisher: book.publisher
@@ -293,8 +301,6 @@ function addBook(path, outDir) {
                         rating: book.rating,
                         bookName: book.fileName
                     });
-		    converter.convertToMobi(outDir + "/Books/" + book.author + "/" + book.title + "/" + book.fileName)
-                        .catch(e => console.log(e));
                     newBook.save(function (err) {
                         if (err)
                             console.log(err);
