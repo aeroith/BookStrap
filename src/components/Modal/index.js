@@ -29,6 +29,8 @@ export default class BookModal extends Component {
     }
     open = () => this.setState({ open: true })
     close = () => this.setState({ open: false })
+
+    // pass download requests to the related link
     handleDownload = () => {
         request.get(`/books/${this.state.bookContent[0].author}/${this.state.bookContent[0].title}/${this.state.bookContent[0].bookName}`) 
                                         .end((err, res) => {
@@ -37,23 +39,25 @@ export default class BookModal extends Component {
     }
     handleKindleSend = e => {
         var self = this;
+        // A loading screen to prevent multiple requests by accident
         this.setState({ isLoading: true })
+        // Let it run for 1 second
+        setTimeout(function () {
+            this.setState({ isLoading: false, isSent: true, isSuccessful: true });
+        }.bind(this), 1000);
         request.post("/sendtokindle")
             .send(self.state.bookContent[0])
             .end((err, resp) => {
                 if (err) {
-                    this.setState({ isLoading: false, isSent: true, isSuccessful: false })
+                    self.setState({ isLoading: false, isSent: true, isSuccessful: false })
                     return resp;
                 }
                 else {
-                    setInterval(() => {
-                        this.setState({ isLoading: false, isSent: true, isSuccessful: true })
-                    }, 1000);
                     return resp;
                 }
             })
     }
-    
+    // Rate the book with stars
     handleRating = (e,data) => {
         const book = this.state.bookContent[0];
         e.preventDefault()
@@ -65,6 +69,7 @@ export default class BookModal extends Component {
                 })
     }
 
+    // get book details when new props are received
     componentWillReceiveProps(nextProps){
         let self = this;
         if(nextProps.author !== '' && (typeof nextProps.author !== "undefined"))
@@ -91,9 +96,9 @@ export default class BookModal extends Component {
                 size="large"
                 closeIcon="close"
                 > 
-            <Modal.Header>
+            <Modal.Header className="modal-header">
                 {bookContent[0].author}
-                <Rating style={{float:"right", "margin":"5px 10px 0px 0px"}} size="large" 
+                <Rating style={{float:"right", "margin":"5px 20px 0px 0px"}} size="large" 
                 defaultRating={bookContent[0].rating / 2} maxRating={5} icon="star" 
                 onRate={this.handleRating}/>
             </Modal.Header>
@@ -143,6 +148,7 @@ BookModal.propTypes = {
   author: React.PropTypes.string,
 };
 
+// Put subjects as link to similar books
 class SubjectList extends Component {
     constructor(props){
         super(props);
@@ -168,11 +174,13 @@ class SubjectList extends Component {
         );
     }
 }
+// handleClose is necessary to due to a bug in semantic ui
 SubjectList.PropTypes = {
     subjects: PropTypes.array.isRequired,
     handleClose: PropTypes.func.isRequired
 }
 
+// A loading screen
 const KindleLoader = (props) => {
     return(
     <Dimmer active={props.status}>
@@ -180,7 +188,11 @@ const KindleLoader = (props) => {
     </Dimmer>
     );
 }
+KindleLoader.PropTypes = {
+    active: PropTypes.bool.isRequired
+}
 
+// A feedback message to inform the user
 const KindleMessage = (props) => {
     return (
         props.open ? props.result ?
@@ -199,4 +211,9 @@ const KindleMessage = (props) => {
             <div></div>
 
     )
+}
+// result prop determines if the action is successful or not
+KindleMessage.PropTypes = {
+    open: PropTypes.bool.isRequired,
+    result: PropTypes.bool.isRequired
 }

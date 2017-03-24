@@ -19,6 +19,13 @@ img {
     .publisher {
         font-size: .9em !important;
     }
+    .ui.large.modal > .header{
+        font-size: 1.2em !important;
+    }
+    .ui.large.rating {
+        font-size: 1rem !important;
+        margin-right: 10px !important;
+    }
     .ui.red.button.close-button{
         display: inline-block;
     }
