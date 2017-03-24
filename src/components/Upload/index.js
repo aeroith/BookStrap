@@ -47,7 +47,7 @@ class FileUpload extends Component {
             .post("/upload")
             .send(epub)
             .on("progress", event => {
-                this.setState({percent: event.percent});
+                this.setState({percent: Math.round(event.percent)});
             })
             .end(function (err, resp) {
                 if (err) {
@@ -76,8 +76,7 @@ class FileUpload extends Component {
                     <ProgressBar active={this.state.uploadStatus}
                                  percent={this.state.percent} />
                     <Dropzone className="dropzone"
-                        // multiple files are allowed
-                        multiple={true}
+                        multiple={false}
                         // accept only epub files
                         accept="application/epub+zip"
                         onDropAccepted={this.onDropAccepted}
