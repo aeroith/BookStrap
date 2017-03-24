@@ -28,6 +28,7 @@ the main advantages of the framework, they are:
 - Easy to install and portable
 - Lightweight and without too many lines of code
 - A search is provided with the support of tags
+- If you have Amazon Kindle, you can directly send the books to it
 
 Also this is actually my first project in Web Development so expect a lot of bad code :)  
 
@@ -36,17 +37,33 @@ Also this is actually my first project in Web Development so expect a lot of bad
 To install the framework just follow the steps below:
 
 - Clone the repo: `git clone https://github.com/aeroith/BookStrap.git`
-- Rename the configuration file in the server directory by removing the example
+- Rename the configuration file in the server directory by removing the .example
 extension: `mv server/config.json.example server/config.json`
 - Fill the `config.json` file according to your settings.
 - Install the dependencies for both backend and frontend using `npm install` inside the root project folder and server folder
 - Build: `npm run build`
+- Test: `npm test`
 - Serve: `node server`
 - Go to `localhost:3001`to see your app
 
 The app will by default serve on 3001 port for the production build and 3000 for
 the development build. You can change it according to your needs. I personally use it with Nginx reverse
 proxy as you can see in the demo. But it is up to you to decide how to serve it.
+
+## Sending books to Amazon Kindle (experimental)
+This feature is currently experimental and can have some problems with certain books. Converting
+books to .mobi format requires high CPU usage so sometimes the server cannot handle it. My server
+is the cheapest one from DigitalOcean and it works fine now. 
+
+I have only tried it with gmail and it works. I will test it with custom
+mails and other providers when I have time. For GMail, just make sure that you enable
+[less secure apps](https://www.google.com/settings/security/lesssecureapps) for it. And also
+make sure to add your email address to 
+[Amazon manage your content and devices page.](https://www.amazon.com/mn/dcw/myx.html)
+
+`config.json` file is self explanatory. Just put your gmail username/password and your
+kindle mail address (must end with @kindle.com) there. Sorry for kobo/nook users:(
+
 
 ## Bugs, Issues and feature requests
 
@@ -55,7 +72,8 @@ send me a mail or [open a new issue](https://github.com/aeroith/BookStrap/issues
 that if you have problems with adding books to the server, please refer to my 
 [epub parser here](https://github.com/aeroith/epub-metadata-parser).
 
+Currently big files can be problematic sometimes. I am trying to find the reason as it works
+perfectly on localhost.
+
 ## TODO
-I plan to add a login page to access the material, since you don't really want anyone to access your
-books right? Also in the future, I plan to add to .mobi conversion so that it is possible to send
-the books directly to the Kindle.
+I am planning to add a login page to the homepage. 

@@ -21,7 +21,6 @@ const converter = require("./helpers/converter");
 const config = require("./config.json");
 const kindleMail = require("./helpers/kindlemail");
 let q = async.queue(function(task, callback) {
-    console.log("hello " + task.name);
     callback();
 }, 2);
 const MAX_QUEUE_OPERATIONS = 10;
