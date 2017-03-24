@@ -4,7 +4,7 @@ import Dropzone from "react-dropzone";
 import request from "superagent";
 import "./style.css";
 import dropzoneIcon from "./dropzone.png";
-import { Message, Loader} from "semantic-ui-react";
+import { Message, Progress} from "semantic-ui-react";
 
 export default class Upload extends Component {
 
@@ -28,7 +28,8 @@ class FileUpload extends Component {
         this.state = {
             file: [],
             hidden: true,
-            loader: false,
+            uploadStatus: false,
+            percent: 0,
         };
         this.onDropAccepted = this
             .onDropAccepted
@@ -38,20 +39,23 @@ class FileUpload extends Component {
             .bind(this);
     }
     dropHandler(file) {
-        this.setState({loader: true})
+        this.setState({uploadStatus: true});
         var self = this;
         var epub = new FormData();
         epub.append("epub", file[0]);
         request
             .post("/upload")
             .send(epub)
+            .on("progress", event => {
+                this.setState({percent: event.percent});
+            })
             .end(function (err, resp) {
                 if (err) {
                     console.error(err);
-                    self.setState({status: false, hidden: false, loader: false});
+                    self.setState({status: false, hidden: false});
                 }
                 else {
-                    self.setState({ file, status: true, hidden: false, loader: false });
+                    self.setState({ file, status: true, hidden: false});
                     return (resp);
                 }
             });
@@ -69,9 +73,8 @@ class FileUpload extends Component {
                     <UploadMessage hidden={this.state.hidden}
                         status={this.state.status}
                     />
-                    <Loader active={this.state.loader}
-                            inline="centered"
-                            indeterminate />
+                    <ProgressBar active={this.state.uploadStatus}
+                                 percent={this.state.percent} />
                     <Dropzone className="dropzone"
                         // multiple files are allowed
                         multiple={true}
@@ -108,4 +111,16 @@ class UploadMessage extends Component {
 UploadMessage.PropTypes = {
     hidden: PropTypes.bool,
     success: PropTypes.bool
-}
+};
+
+const ProgressBar = props => {
+    return(
+        props.active ? 
+        <Progress percent={props.percent}
+        label="Uploading"
+        progress
+        indicating
+        autoSuccess /> :
+        <div></div>
+    ); 
+};
