@@ -37,20 +37,21 @@ export default class BookModal extends Component {
     }
     handleKindleSend = e => {
         var self = this;
-        this.setState({isLoading: true})
+        this.setState({ isLoading: true })
         request.post("/sendtokindle")
-               .timeout({deadline: 600000})
-               .send(self.state.bookContent[0])
-               .end((err, resp) => {
-                   if(!err){
-                    this.setState({isLoading: false, isSent: true, isSuccessful: true})
+            .send(self.state.bookContent[0])
+            .end((err, resp) => {
+                if (err) {
+                    this.setState({ isLoading: false, isSent: true, isSuccessful: false })
                     return resp;
-                   }
-                   else {
-                    this.setState({isLoading: false, isSent: true, isSuccessful: false})
+                }
+                else {
+                    setInterval(() => {
+                        this.setState({ isLoading: false, isSent: true, isSuccessful: true })
+                    }, 1000);
                     return resp;
-                   }
-               })
+                }
+            })
     }
     
     handleRating = (e,data) => {
@@ -184,10 +185,16 @@ const KindleMessage = (props) => {
     return (
         props.open ? props.result ?
             <Message positive>
+                <Message.Content>
+                <Message.Header>Operation Successful!</Message.Header>
                 Selected book is successfully sent to the Kindle device!
+                </Message.Content>
                     </Message> :
             <Message negative>
-                An error occured, please check the log.
+                <Message.Content>
+                <Message.Header>Operation Failed!</Message.Header>
+                There are currently too many operations. Please try again later.
+                </Message.Content>
                     </Message> :
             <div></div>
 

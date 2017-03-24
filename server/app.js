@@ -6,20 +6,25 @@ const Book = require("./db");
 const _ = require("lodash");
 const fs = require("fs");
 const compression = require("compression");
-const bodyParser = require("body-parser")
+const bodyParser = require("body-parser");
 const parser = require("epub-metadata-parser");
 const multer = require("multer");
 const upload = multer({
     dest: "./client/books"
 });
 const helmet = require("helmet");
+const async = require("async");
 const SENDGRID_API_KEY = require("./config.json").SENDGRID_API_KEY;
 const SENDGRID_MAIL = require("./config.json").SENDGRID_MAIL;
 var helper = require("sendgrid").mail;
 const converter = require("./helpers/converter");
 const config = require("./config.json");
-const kindleMail = require("./helpers/kindlemail")
-
+const kindleMail = require("./helpers/kindlemail");
+let q = async.queue(function(task, callback) {
+    console.log("hello " + task.name);
+    callback();
+}, 2);
+const MAX_QUEUE_OPERATIONS = 10;
 app.use(compression());
 // Setup logger
 app.use(morgan(":remote-addr - :remote-user [:date[clf]] \":method :url HTTP/:http-version\" :st" +
@@ -245,26 +250,35 @@ app.get("/api/getcategory/:category", (req, res) => {
 // send book to kindle device
 app.post("/sendtokindle", (req, res) => {
     let checkFileExists = s => new Promise(r => fs.access(s, fs.F_OK, e => r(!e)));
-    let mobiPath = `./public/Books/${req.body.author}/${req.body.title}/${req.body.bookName.slice(0,-4)}mobi`;
-    checkFileExists(mobiPath).then(result => {
-        if (!result) {
-            return converter.convertToMobi(mobiPath.slice(0, -4) + "epub");
-        }
-    }).then(() => {
-        kindleMail.send({
-            to: config.KINDLE_MAIL,
-            sender: {
-                user: config.GMAIL_ADDRESS,
-                pass: config.GMAIL_PASSWORD,
-            },
-            filePath: `./public/Books/${req.body.author}/${req.body.title}/${req.body.bookName.slice(0,-4)}mobi`
-        }).then((info) => {
+    let mobiPath = `./public/Books/${req.body.author}/${req.body.title}/${req.body.bookName.slice(0, -4)}mobi`;
+    if (q.length() <= MAX_QUEUE_OPERATIONS) {
+        q.push({ name: req.body.title }, err => {
             res.status(200).end();
-        }).catch(e => {
-            console.log(e);
-            res.status(500).end();
+            if (err) {
+                res.status(500).end();
+                console.log(err);
+            }
+            checkFileExists(mobiPath).then(result => {
+                if (!result) {
+                    return converter.convertToMobi(mobiPath.slice(0, -4) + "epub");
+                }
+            }).then(() => {
+                kindleMail.send({
+                    to: config.KINDLE_MAIL,
+                    sender: {
+                        user: config.GMAIL_ADDRESS,
+                        pass: config.GMAIL_PASSWORD,
+                    },
+                    filePath: `./public/Books/${req.body.author}/${req.body.title}/${req.body.bookName.slice(0, -4)}mobi`
+                }).catch(e => {
+                    console.log(e);
+                    res.status(500).end();
+                });
+            });
         });
-    });
+    }
+    else
+        res.status(500).end();
 });
 
 // Always return the main index.html, so react-router render the route in the
