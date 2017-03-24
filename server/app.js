@@ -36,7 +36,8 @@ app.use(express.static(path.resolve(__dirname, "..", "build")));
 app.use("/books", express.static(path.resolve(__dirname, "..", "public", "Books")));
 app.use(bodyParser.json()); // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({ // to support URL-encoded bodies
-    extended: true
+    extended: true,
+    limit: 15 * 1024 * 1024
 }));
 
 app.get("/download/:author/:title/:bookName", (req, res) => {
