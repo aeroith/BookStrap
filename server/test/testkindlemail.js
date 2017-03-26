@@ -59,6 +59,6 @@ describe("Input validator", () => {
                 pass: "pass"
             },
             filePath: filepath
-        }).then(() => fs.unlinkSync(filepath)).should.eventually.be.rejectedWith("ECONNREFUSED");
+        }).should.eventually.be.rejectedWith("ECONNREFUSED");
     });
 });
