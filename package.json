@@ -21,6 +21,7 @@
     "react-router": "^3.0.2",
     "react-scripts": "^0.9.5",
     "react-tap-event-plugin": "^2.0.1",
+    "react-test-renderer": "^15.5.4",
     "semantic-ui-css": "^2.2.4",
     "semantic-ui-react": "^0.64.7",
     "sendgrid": "^4.7.1",
