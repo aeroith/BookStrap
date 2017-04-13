@@ -20,9 +20,10 @@ var helper = require("sendgrid").mail;
 const converter = require("./helpers/converter");
 const config = require("./config.json");
 const kindleMail = require("./helpers/kindlemail");
+// set the async queue for the book operations
 let q = async.queue(function(task, callback) {
     callback();
-}, 2);
+}, 1);
 const MAX_QUEUE_OPERATIONS = 10;
 app.use(compression());
 // Setup logger
