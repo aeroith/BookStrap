@@ -10,9 +10,7 @@ The current stack used behind the framework is Node.js, Express.js, MongoDB and
 React. 
 The React part was bootstrapped with [Create React App](https://github.com/facebookincubator/create-react-app).
 Please refer to the link for the further guide on the development of the frontend.
-
-### Demo
-You can find the demo in here: https://bookstrap.ga/ 
+/ 
 
 ## Why should you use it?
 
