@@ -1,5 +1,7 @@
 # BookStrap
 
+This was my first experiment with React, and I didn't maintain it afterwards. This means the dependencies are out of date and have known vulnerabilities. I am still keeping this repository to look back and see how my code evolved but still I wouldn't recommnend anyone to use this in 2021. Calibre is evolved a lot and now it doesn't have the problems I have wrote back then. So go with Calibre :)
+
 [![Build Status](https://travis-ci.org/aeroith/BookStrap.svg?branch=master)](https://travis-ci.org/aeroith/BookStrap)
 
 BookStrap is created to provide an easy and useful way of organizing and
